@@ -86,11 +86,24 @@ const putComponentsTogether = async (pathCoreFrom, pathCompsFrom, pathTo) => {
 
 
 const buildPage = async () => {
+  console.log('Here we go!');
+  let curTime = new Date().getTime();
   await fsPromises.mkdir(DEST_FOLDER, {recursive: true});
+  console.log(`Folder has created: ${new Date().getTime() - curTime}ms`);
 
+  curTime = new Date().getTime();
   await replaceAssets(paths.src.assets, paths.build.assets);
+  console.log(`Assets have been copied: ${new Date().getTime() - curTime}ms`);
+
+  curTime = new Date().getTime();
   await putStylesTogether(paths.src.css, paths.build.css);
+  console.log(`Styles have been collected to style.css: ${new Date().getTime() - curTime}ms`);
+
+  curTime = new Date().getTime();
   await putComponentsTogether(paths.src.htmlCore, paths.src.htmlComp, paths.build.html);
+  console.log(`Styles have been collected to index.html: ${new Date().getTime() - curTime}ms`);
+
+  console.log('Finished!');
 };
 
 buildPage();
