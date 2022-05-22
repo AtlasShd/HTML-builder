@@ -1,11 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 
-const FOLDER_NAME = 'secret-folder';
+const SOURCE_FOLDER = path.resolve(__dirname, 'secret-folder');
 
-fs.promises.readdir(path.resolve(__dirname, FOLDER_NAME), {withFileTypes: true})
+const showFilesInFolder = () => {
+  fs.promises.readdir(SOURCE_FOLDER, {withFileTypes: true})
   .then((files) => new Promise((resolve, reject) => {
     let data = [];
+    
     for (const file of files) {
       if (file.isFile()) {
         const parseName = path.parse(file.name);
@@ -20,7 +22,7 @@ fs.promises.readdir(path.resolve(__dirname, FOLDER_NAME), {withFileTypes: true})
   }))
   .then((data) => new Promise((resolve, reject) => {    
     for (const {fileName, fileExt} of data) {
-      fs.stat(path.resolve(__dirname, FOLDER_NAME, `${fileName}.${fileExt}`), (err, stats) => {
+      fs.stat(path.resolve(SOURCE_FOLDER, `${fileName}.${fileExt}`), (err, stats) => {
         if (err) {
           reject(err);
         }
@@ -44,4 +46,6 @@ fs.promises.readdir(path.resolve(__dirname, FOLDER_NAME), {withFileTypes: true})
   .catch((err) => {
     console.log(err);
   });
+};
 
+showFilesInFolder();
