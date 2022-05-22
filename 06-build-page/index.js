@@ -75,7 +75,7 @@ const putComponentsTogether = async (pathCoreFrom, pathCompsFrom, pathTo) => {
       continue;
     }
 
-    const regExp = new RegExp(`\{\{${parseName.name}\}\}`, 'g');
+    const regExp = new RegExp(`{{${parseName.name}}}`, 'g');
     const readCompFile = await fsPromises.readFile(path.resolve(pathCompsFrom, file.name), {encoding: 'utf-8'});
 
     readCoreFile = readCoreFile.replaceAll(regExp, readCompFile);  
@@ -85,10 +85,12 @@ const putComponentsTogether = async (pathCoreFrom, pathCompsFrom, pathTo) => {
 };
 
 
-(async () => {
+const buildPage = async () => {
   await fsPromises.mkdir(DEST_FOLDER, {recursive: true});
 
   await replaceAssets(paths.src.assets, paths.build.assets);
   await putStylesTogether(paths.src.css, paths.build.css);
   await putComponentsTogether(paths.src.htmlCore, paths.src.htmlComp, paths.build.html);
-})();
+};
+
+buildPage();
