@@ -22,13 +22,13 @@ const writeFile = () => {
     const lowerCaseText = text.toLowerCase().trim();
     if (lowerCaseText === STOP_WORD) {
       readConsole.close();
+    } else {
+      writableStream.write(String(text));
     }
-
-    writableStream.write(String(text));
   };
   
   const printLastMessage = () => {
-    console.log('Nice to meet you! Go-o-o-dby-y-e');
+    console.log('Go-o-o-dby-y-e!');
   };
   
   readConsole.question(`Hello, ${process.env.USERNAME || 'User'}! Do you wanna tell me something interesting?\n`, writeLine);
