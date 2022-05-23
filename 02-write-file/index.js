@@ -17,12 +17,11 @@ const writeFile = () => {
   });
 
   const writeLine = (text) => {
-    console.log('Anything else?');
-
     const lowerCaseText = text.toLowerCase().trim();
     if (lowerCaseText === STOP_WORD) {
       readConsole.close();
     } else {
+      console.log('Anything else?');
       writableStream.write(String(text));
     }
   };
