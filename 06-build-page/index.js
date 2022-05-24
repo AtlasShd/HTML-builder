@@ -19,6 +19,35 @@ const paths = {
   },
 };
 
+const rmDir = async (dir) => {
+  const recursiveRm = async (dirPath) => {
+    const files = await fsPromises.readdir(dirPath, {withFileTypes: true});
+  
+    for (const file of files) {
+        if (file.isFile()) {
+          await fsPromises.unlink(path.resolve(dirPath, file.name));
+        } else {
+          await recursiveRm(path.resolve(dirPath, file.name));
+          await fsPromises.rmdir(path.resolve(dirPath, file.name));
+        }
+    }
+  };
+  
+  const coreDir = await fsPromises.readdir(path.dirname(dir), {withFileTypes: true});
+  
+  for (const file of coreDir) {
+    if (file.name !== path.basename(dir)) {
+      continue;
+    }
+    
+    if (file.isDirectory()) {
+      await recursiveRm(dir);
+    } else {
+      console.error(`I can\'n create folder with name ${path.basename(dir)} because file with this name already exist!`);
+    }
+  }
+};
+
 const replaceAssets = async (pathFrom, pathTo) => {
   await fsPromises.mkdir(pathTo, {recursive: true});
 
@@ -88,6 +117,7 @@ const putComponentsTogether = async (pathCoreFrom, pathCompsFrom, pathTo) => {
 const buildPage = async () => {
   console.log('Here we go!');
   let curTime = new Date().getTime();
+  await rmDir(DEST_FOLDER); // можно убрать без ущерба коду, но тогда выключится актуализация по старым файлам в целевой папке
   await fsPromises.mkdir(DEST_FOLDER, {recursive: true});
   console.log(`Folder has created: ${new Date().getTime() - curTime}ms`);
 
